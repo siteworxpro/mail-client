@@ -8,7 +8,7 @@ use GuzzleHttp\Exception\ServerException;
 use Psr\Log\LoggerInterface;
 use Psr\SimpleCache\CacheInterface;
 
-class MailTransport implements TransportInterface
+class ApiTransport implements TransportInterface
 {
 
     /**
@@ -207,6 +207,13 @@ class MailTransport implements TransportInterface
             }
 
         } catch (ServerException $exception) {
+
+            $result = $exception->getResponse();
+            $body = $result->getBody()->getContents();
+
+            $data = json_decode($body);
+
+        } catch (RequestException $exception) {
 
             $result = $exception->getResponse();
             $body = $result->getBody()->getContents();

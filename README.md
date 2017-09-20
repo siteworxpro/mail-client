@@ -13,7 +13,7 @@ Usage
 ```
 require 'vendor/autoload.php';
 
-$transport = new Siteworx\Mail\Transports\MailTransport([
+$transport = new Siteworx\Mail\Transports\ApiTransport([
 	'client_id' => 'k4ndk...4kkfa',
 	'client_secret' => 'Jdv4...4kvD'
 ]);
