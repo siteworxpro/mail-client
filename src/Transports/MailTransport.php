@@ -54,17 +54,19 @@ class MailTransport implements TransportInterface
      */
     public function __construct(array $config = [])
     {
+        if (!isset($config['client_id'])) {
+            throw new \Exception('Client ID is missing.');
+        }
+
+        if (!isset($config['client_secret'])) {
+            throw new \Exception('Client Secret missing.');
+        }
+
         $this->_client = new Guzzle();
         $this->_clientId = $config['client_id'];
         $this->_clientSecret = $config['client_secret'];
 
-        if (empty($this->_clientId)) {
-            throw new \Exception('Client ID is missing.');
-        }
 
-        if (empty($this->_clientSecret)) {
-            throw new \Exception('Client Secret missing.');
-        }
     }
 
     /**
