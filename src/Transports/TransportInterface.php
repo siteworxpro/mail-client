@@ -1,6 +1,6 @@
 <?php
 
-namespace Siteworx\Mail;
+namespace Siteworx\Mail\Transports;
 
 use Psr\Log\LoggerInterface;
 use Psr\SimpleCache\CacheInterface;

@@ -1,6 +1,6 @@
 <?php
 
-namespace Siteworx\Mail;
+namespace Siteworx\Mail\Transports;
 
 use GuzzleHttp\Client as Guzzle;
 use GuzzleHttp\Exception\RequestException;
@@ -165,7 +165,7 @@ class MailTransport implements TransportInterface
             }
         }
 
-        if ($this->_accessToken == null) {
+        if (empty($this->_accessToken)) {
             $this->refreshToken();
         }
 

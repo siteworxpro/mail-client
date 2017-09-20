@@ -3,6 +3,7 @@
 namespace Siteworx\Mail;
 
 use Siteworx\Mail\Exceptions\ValidationException;
+use Siteworx\Mail\Transports\TransportInterface;
 
 /**
  * Class Client
@@ -18,6 +19,13 @@ class Client
     private $_subject = '';
     private $_body = '';
     private $_isHtml = false;
+
+    private $_catch = false;
+
+    /**
+     * @var bool|\DateTimeInterface
+     */
+    private $_sendTime = false;
 
     public function __construct(TransportInterface $transport)
     {
@@ -58,20 +66,51 @@ class Client
         $this->_from = $from;
     }
 
-    public function send(): array
+    public function send(bool $catch = false): \stdClass
     {
-        $this->buildPayload();
+        $this->_catch = $catch;
+        $payload = $this->buildPayload();
+        $result = $this->_transport->sentMailPayload($payload);
 
+        return $result;
+    }
+
+    public function sendTime(\DateTimeInterface $sendTime)
+    {
+        $this->_sendTime = $sendTime;
     }
 
     private function buildPayload(): array
     {
 
-        $return = [
-
+        $mailPayload = [
+            'Destination' => [
+                'ToAddresses' => $this->_to
+            ],
+            'Message'     => [
+                'Subject' => [
+                    'Data' => $this->_subject
+                ]
+            ],
+            'Source'      => $this->_from
         ];
 
-        return $return;
+        if ($this->_isHtml) {
+            $mailPayload['Message']['Body']['Html']['Data'] = $this->_body;
+            $mailPayload['Message']['Body']['Text']['Data'] = htmlentities($this->_body);
+        } else {
+            $mailPayload['Message']['Body']['Text']['Data'] = $this->_body;
+        }
+
+        if ($this->_catch) {
+            $mailPayload['Catch'] = true;
+        }
+
+        if ($this->_sendTime !== false) {
+            $mailPayload['ScheduledTime'] = $this->_sendTime->format('Y-m-d H:i:s');
+        }
+
+        return $mailPayload;
 
     }
 }
