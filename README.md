@@ -1,8 +1,8 @@
-# Mail client for the siteworx pro email API
+##Mail client for the siteworx pro email API
 
 https://email.siteworxpro.com/api
 
-Access to the API is restricted and requires and account.
+Access to the API is restricted and requires an account.
 
 `composer require siteworx/mail-client`
 

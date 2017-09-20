@@ -115,7 +115,7 @@ class MailTransport implements TransportInterface
 
         $this->setToken();
 
-        if($this->_logger !== null) {
+        if ($this->_logger !== null) {
             $this->_logger->info('Sending Email.');
         }
 
@@ -130,8 +130,10 @@ class MailTransport implements TransportInterface
             $body = $result->getBody()->getContents();
             $data = json_decode($body);
 
-            $this->_logger->info('Success!');
-            $this->_logger->debug(\json_encode($body));
+            if ($this->_logger !== null) {
+                $this->_logger->info('Success!');
+                $this->_logger->debug(\json_encode($body));
+            }
 
         } catch (ServerException $exception) {
 
@@ -140,7 +142,7 @@ class MailTransport implements TransportInterface
 
             $data = json_decode($body);
 
-            if($this->_logger !== null) {
+            if ($this->_logger !== null) {
                 $this->_logger->warning('An error occurred sending the email! (' . $result->getStatusCode() . ')');
                 $this->_logger->debug(\json_encode($body));
             }
@@ -152,7 +154,7 @@ class MailTransport implements TransportInterface
 
             $data = json_decode($body);
 
-            if($this->_logger !== null) {
+            if ($this->_logger !== null) {
                 $this->_logger->warning('An error occurred sending the email! (' . $result->getStatusCode() . ')');
                 $this->_logger->debug(\json_encode($body));
             }
