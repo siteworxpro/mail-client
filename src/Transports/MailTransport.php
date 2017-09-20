@@ -72,12 +72,12 @@ class MailTransport implements TransportInterface
     /**
      * @param mixed $Cache
      */
-    public function setCache(CacheInterface $Cache): void
+    public function setCache(CacheInterface $Cache)
     {
         $this->_cache = $Cache;
     }
 
-    public function setLogger(LoggerInterface $logger): void
+    public function setLogger(LoggerInterface $logger)
     {
         $this->_logger = $logger;
     }
@@ -93,7 +93,7 @@ class MailTransport implements TransportInterface
     /**
      * @param string $clientId
      */
-    public function setClientId(string $clientId): void
+    public function setClientId(string $clientId)
     {
         $this->_clientId = $clientId;
     }
@@ -101,7 +101,7 @@ class MailTransport implements TransportInterface
     /**
      * @param string $clientSecret
      */
-    public function setClientSecret(string $clientSecret): void
+    public function setClientSecret(string $clientSecret)
     {
         $this->_clientSecret = $clientSecret;
     }
@@ -110,12 +110,14 @@ class MailTransport implements TransportInterface
      * @param array $payload
      * @return \stdClass
      */
-    public function sentMailPayload(array $payload): \stdClass
+    public function sentMailPayload(array $payload)
     {
 
         $this->setToken();
 
-        $this->_logger->info('Sending Email.');
+        if($this->_logger !== null) {
+            $this->_logger->info('Sending Email.');
+        }
 
         try {
             $result = $this->_client->post($this->_apiEndpoint . '/api/email', [
@@ -138,8 +140,10 @@ class MailTransport implements TransportInterface
 
             $data = json_decode($body);
 
-            $this->_logger->warning('An error occurred sending the email! (' . $result->getStatusCode() . ')');
-            $this->_logger->debug(\json_encode($body));
+            if($this->_logger !== null) {
+                $this->_logger->warning('An error occurred sending the email! (' . $result->getStatusCode() . ')');
+                $this->_logger->debug(\json_encode($body));
+            }
 
         } catch (RequestException $exception) {
 
@@ -148,8 +152,10 @@ class MailTransport implements TransportInterface
 
             $data = json_decode($body);
 
-            $this->_logger->warning('An error occurred sending the email! (' . $result->getStatusCode() . ')');
-            $this->_logger->debug(\json_encode($body));
+            if($this->_logger !== null) {
+                $this->_logger->warning('An error occurred sending the email! (' . $result->getStatusCode() . ')');
+                $this->_logger->debug(\json_encode($body));
+            }
 
         }
 
@@ -157,7 +163,7 @@ class MailTransport implements TransportInterface
 
     }
 
-    private function setToken(): void
+    private function setToken()
     {
         if ($this->_cache !== null) {
             $this->_accessToken = $this->_cache->get('access_token');
@@ -176,7 +182,7 @@ class MailTransport implements TransportInterface
     /**
      * @return \stdClass
      */
-    private function refreshToken(): \stdClass
+    private function refreshToken()
     {
         $params = [
             'scope'         => 'default',

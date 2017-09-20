@@ -16,7 +16,7 @@ class Client
 
     private $_to = [];
     private $_from = '';
-    private $_subject = '';
+    private $_subject = '(No Subject)';
     private $_body = '';
     private $_isHtml = false;
 
@@ -36,7 +36,7 @@ class Client
      * @param string $to
      * @throws ValidationException
      */
-    public function addTo(string $to): void
+    public function addTo(string $to)
     {
         if (!Validator::validateEmailAddress($to)) {
             throw new ValidationException('Email address is invalid');
@@ -50,23 +50,23 @@ class Client
      * @param string $body
      * @param bool   $isHtml
      */
-    public function setBody(string $body, bool $isHtml = false): void
+    public function setBody(string $body, bool $isHtml = false)
     {
         $this->_body = $body;
         $this->_isHtml = $isHtml;
     }
 
-    public function setSubject(string $subject): void
+    public function setSubject(string $subject)
     {
         $this->_subject = $subject;
     }
 
-    public function setFrom(string $from): void
+    public function setFrom(string $from)
     {
         $this->_from = $from;
     }
 
-    public function send(bool $catch = false): \stdClass
+    public function send(bool $catch = false)
     {
         $this->_catch = $catch;
         $payload = $this->buildPayload();
