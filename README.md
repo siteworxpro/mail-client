@@ -1,4 +1,4 @@
-##Mail client for the siteworx pro email API
+## Mail client for the siteworx pro email API
 
 https://email.siteworxpro.com/api
 
