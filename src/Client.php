@@ -69,7 +69,7 @@ class Client
     public function send(bool $catch = false)
     {
         $this->_catch = $catch;
-        $payload = $this->buildPayload();
+        $payload = $this->_buildPayload();
         $result = $this->_transport->sentMailPayload($payload);
 
         return $result;
@@ -80,8 +80,21 @@ class Client
         $this->_sendTime = $sendTime;
     }
 
-    private function buildPayload(): array
+    private function _validateFields()
     {
+        if (empty($this->_to)) {
+            throw new ValidationException('To Address is required');
+        }
+
+        if (empty($this->_from)) {
+            throw new ValidationException('From Address is required');
+        }
+    }
+
+    private function _buildPayload(): array
+    {
+
+        $this->_validateFields();
 
         $mailPayload = [
             'Destination' => [
