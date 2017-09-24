@@ -15,6 +15,11 @@ class Client
     private $_transport;
 
     private $_to = [];
+    private $_cc = [];
+    private $_bcc = [];
+
+    private $_files = [];
+
     private $_from = '';
     private $_subject = '(No Subject)';
     private $_body = '';
@@ -46,6 +51,24 @@ class Client
 
     }
 
+    public function addCc(string $cc)
+    {
+        if (!Validator::validateEmailAddress($cc)) {
+            throw new ValidationException('Email address is invalid');
+        }
+
+        $this->_cc[] = $cc;
+    }
+
+    public function addBcc(string $bcc)
+    {
+        if (!Validator::validateEmailAddress($bcc)) {
+            throw new ValidationException('Email address is invalid');
+        }
+
+        $this->_bcc[] = $bcc;
+    }
+
     /**
      * @param string $body
      * @param bool   $isHtml
@@ -73,6 +96,15 @@ class Client
         $result = $this->_transport->sentMailPayload($payload);
 
         return $result;
+    }
+
+    public function addAttachment(string $fileLocation)
+    {
+        if (!file_exists($fileLocation)) {
+            throw new ValidationException('File does not exist.');
+        }
+        $file = fopen($fileLocation, 'r');
+        $this->_files[] = $file;
     }
 
     public function sendTime(\DateTimeInterface $sendTime)
@@ -107,6 +139,14 @@ class Client
             ],
             'Source'      => $this->_from
         ];
+
+        if (!empty($this->_cc)) {
+            $mailPayload['Destination']['CcAddresses'] = $this->_cc;
+        }
+
+        if (!empty($this->_bcc)) {
+            $mailPayload['Destination']['BccAddresses'] = $this->_bcc;
+        }
 
         if ($this->_isHtml) {
             $mailPayload['Message']['Body']['Html']['Data'] = $this->_body;
