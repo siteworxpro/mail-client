@@ -79,16 +79,32 @@ class Client
         $this->_isHtml = $isHtml;
     }
 
+    /**
+     * @param string $subject
+     */
     public function setSubject(string $subject)
     {
         $this->_subject = $subject;
     }
 
+    /**
+     * @param string $from
+     *
+     * @throws ValidationException
+     */
     public function setFrom(string $from)
     {
+        if (!Validator::validateEmailAddress($from)) {
+            throw new ValidationException('Email address is invalid');
+        }
+
         $this->_from = $from;
     }
 
+    /**
+     * @param bool $catch
+     * @return mixed
+     */
     public function send(bool $catch = false)
     {
         $this->_catch = $catch;
@@ -98,31 +114,9 @@ class Client
         return $result;
     }
 
-    public function addAttachment(string $fileLocation)
-    {
-        if (!file_exists($fileLocation)) {
-            throw new ValidationException('File does not exist.');
-        }
-        $file = fopen($fileLocation, 'r');
-        $this->_files[] = $file;
-    }
-
-    public function sendTime(\DateTimeInterface $sendTime)
-    {
-        $this->_sendTime = $sendTime;
-    }
-
-    private function _validateFields()
-    {
-        if (empty($this->_to)) {
-            throw new ValidationException('To Address is required');
-        }
-
-        if (empty($this->_from)) {
-            throw new ValidationException('From Address is required');
-        }
-    }
-
+    /**
+     * @return array
+     */
     private function _buildPayload(): array
     {
 
@@ -165,5 +159,41 @@ class Client
 
         return $mailPayload;
 
+    }
+
+    /**
+     * @throws ValidationException
+     */
+    private function _validateFields()
+    {
+        if (empty($this->_to)) {
+            throw new ValidationException('To Address is required');
+        }
+
+        if (empty($this->_from)) {
+            throw new ValidationException('From Address is required');
+        }
+    }
+
+    /**
+     * @param string $fileLocation
+     *
+     * @throws ValidationException
+     */
+    public function addAttachment(string $fileLocation)
+    {
+        if (!file_exists($fileLocation)) {
+            throw new ValidationException('File does not exist.');
+        }
+        $file = fopen($fileLocation, 'r');
+        $this->_files[] = $file;
+    }
+
+    /**
+     * @param \DateTimeInterface $sendTime
+     */
+    public function sendTime(\DateTimeInterface $sendTime)
+    {
+        $this->_sendTime = $sendTime;
     }
 }

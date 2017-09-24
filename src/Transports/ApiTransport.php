@@ -77,6 +77,9 @@ class ApiTransport implements TransportInterface
         $this->_cache = $Cache;
     }
 
+    /**
+     * @param LoggerInterface $logger
+     */
     public function setLogger(LoggerInterface $logger)
     {
         $this->_logger = $logger;
