@@ -51,6 +51,21 @@ class Client
 
     }
 
+    /**
+     * @param array $to
+     * @throws ValidationException
+     */
+    public function setAllTo(array $to)
+    {
+        foreach ($to as $item) {
+            if (!Validator::validateEmailAddress($item)) {
+                throw new ValidationException('Email address is invalid');
+            }
+        }
+
+        $this->_to = $to;
+    }
+
     public function addCc(string $cc)
     {
         if (!Validator::validateEmailAddress($cc)) {
