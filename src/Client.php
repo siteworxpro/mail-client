@@ -12,19 +12,54 @@ use Siteworx\Mail\Transports\TransportInterface;
  */
 class Client
 {
+    /**
+     * @var TransportInterface
+     */
     private $_transport;
 
+    /**
+     * @var array
+     */
     private $_to = [];
+
+    /**
+     * @var array
+     */
     private $_cc = [];
+
+    /**
+     * @var array
+     */
     private $_bcc = [];
 
+    /**
+     * @var array
+     */
     private $_files = [];
 
+    /**
+     * @var string
+     */
     private $_from = '';
+
+    /**
+     * @var string
+     */
     private $_subject = '(No Subject)';
+
+    /**
+     * @var string
+     */
     private $_body = '';
+
+    /**
+     * @var bool
+     */
     private $_isHtml = false;
 
+    /**
+     * @var bool
+     */
     private $_catch = false;
 
     /**
@@ -32,6 +67,11 @@ class Client
      */
     private $_sendTime = false;
 
+    /**
+     * Client constructor.
+     *
+     * @param TransportInterface $transport
+     */
     public function __construct(TransportInterface $transport)
     {
         $this->_transport = $transport;
@@ -66,6 +106,10 @@ class Client
         $this->_to = $to;
     }
 
+    /**
+     * @param string $cc
+     * @throws ValidationException
+     */
     public function addCc(string $cc)
     {
         if (!Validator::validateEmailAddress($cc)) {
@@ -75,6 +119,10 @@ class Client
         $this->_cc[] = $cc;
     }
 
+    /**
+     * @param string $bcc
+     * @throws ValidationException
+     */
     public function addBcc(string $bcc)
     {
         if (!Validator::validateEmailAddress($bcc)) {
@@ -118,6 +166,7 @@ class Client
 
     /**
      * @param bool $catch
+     * @throws ValidationException
      * @return mixed
      */
     public function send(bool $catch = false)
@@ -130,6 +179,7 @@ class Client
     }
 
     /**
+     * @throws ValidationException
      * @return array
      */
     private function _buildPayload(): array
