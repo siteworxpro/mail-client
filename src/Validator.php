@@ -9,15 +9,23 @@ namespace Siteworx\Mail;
  */
 class Validator
 {
+
     /**
      * @param string $email
      * @return bool
      */
-    public static function validateEmailAddress(string $email)
+    public static function validateEmailAddress(string $email): bool
     {
-        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            return false;
-        }
-        return true;
+        return filter_var(self::extractEmailAddress($email), FILTER_VALIDATE_EMAIL) !== false;
     }
+
+
+    private static function extractEmailAddress(string $email): string
+    {
+        $matches = [];
+        preg_match('^<[a-zA-Z@.\-_]+>^', $email, $matches);
+
+        return \count($matches) > 0 ? str_replace(['<', '>'], '', $matches[0]) : $email;
+    }
+
 }
