@@ -173,9 +173,7 @@ class Client
     {
         $this->_catch = $catch;
         $payload = $this->_buildPayload();
-        $result = $this->_transport->sentMailPayload($payload);
-
-        return $result;
+        return $this->_transport->sentMailPayload($payload);
     }
 
     /**
@@ -222,6 +220,19 @@ class Client
             $mailPayload['ScheduledTime'] = $this->_sendTime->format('Y-m-d H:i:s');
         }
 
+        if (\count($this->_files) > 0) {
+            $files = [];
+
+            foreach ($this->_files as $file) {
+                $files[] = [
+                    'FileName' => basename($file),
+                    'Content' => base64_encode(file_get_contents($file))
+                ];
+            }
+
+            $mailPayload['Attachments'] = $files;
+        }
+
         return $mailPayload;
 
     }
@@ -250,8 +261,7 @@ class Client
         if (!file_exists($fileLocation)) {
             throw new ValidationException('File does not exist.');
         }
-        $file = fopen($fileLocation, 'r');
-        $this->_files[] = $file;
+        $this->_files[] = $fileLocation;
     }
 
     /**
