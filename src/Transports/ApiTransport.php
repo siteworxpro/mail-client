@@ -229,4 +229,14 @@ class ApiTransport implements TransportInterface
 
     }
 
+    public function deleteEmail(string $uuid): bool
+    {
+        try {
+            $response = $this->_client->delete($this->_apiEndpoint .'/api/email/' . $uuid);
+
+            return $response->getStatusCode() === 200;
+        } catch (RequestException $exception) {
+            return false;
+        }
+    }
 }

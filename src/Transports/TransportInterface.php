@@ -14,4 +14,6 @@ interface TransportInterface
 
     public function sentMailPayload(array $payload);
 
+    public function deleteEmail(string $uuid): bool;
+
 }

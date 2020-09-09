@@ -177,6 +177,15 @@ class Client
     }
 
     /**
+     * @param string $uuid
+     * @return bool
+     */
+    public function delete(string $uuid): bool
+    {
+        return $this->_transport->deleteEmail($uuid);
+    }
+
+    /**
      * @throws ValidationException
      * @return array
      */
