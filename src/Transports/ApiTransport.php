@@ -50,9 +50,10 @@ class ApiTransport implements TransportInterface
      * Client constructor.
      *
      * @param array $config
+     * @param Guzzle|null $guzzle
      * @throws \Exception
      */
-    public function __construct(array $config = [])
+    public function __construct(array $config = [], Guzzle $guzzle = null)
     {
         if (!isset($config['client_id'])) {
             throw new \Exception('Client ID is missing.');
@@ -62,7 +63,7 @@ class ApiTransport implements TransportInterface
             throw new \Exception('Client Secret missing.');
         }
 
-        $this->_client = new Guzzle();
+        $this->_client = $guzzle ?? new Guzzle();
         $this->_clientId = $config['client_id'];
         $this->_clientSecret = $config['client_secret'];
 
