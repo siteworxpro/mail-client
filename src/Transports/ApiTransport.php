@@ -19,12 +19,12 @@ class ApiTransport implements TransportInterface
     /**
      * @var string
      */
-    private $_clientId = '';
+    private $_clientId;
 
     /**
      * @var string
      */
-    private $_clientSecret = '';
+    private $_clientSecret;
 
     /**
      * @var string
@@ -39,12 +39,12 @@ class ApiTransport implements TransportInterface
     /**
      * @var CacheInterface
      */
-    private $_cache = null;
+    private $_cache;
 
     /**
      * @var LoggerInterface
      */
-    private $_logger = null;
+    private $_logger;
 
     /**
      * Client constructor.
@@ -56,11 +56,11 @@ class ApiTransport implements TransportInterface
     public function __construct(array $config = [], Guzzle $guzzle = null)
     {
         if (!isset($config['client_id'])) {
-            throw new \Exception('Client ID is missing.');
+            throw new \RuntimeException('Client ID is missing.');
         }
 
         if (!isset($config['client_secret'])) {
-            throw new \Exception('Client Secret missing.');
+            throw new \RuntimeException('Client Secret missing.');
         }
 
         $this->_client = $guzzle ?? new Guzzle();
@@ -71,11 +71,11 @@ class ApiTransport implements TransportInterface
     }
 
     /**
-     * @param mixed $Cache
+     * @param mixed $cache
      */
-    public function setCache(CacheInterface $Cache)
+    public function setCache(CacheInterface $cache)
     {
-        $this->_cache = $Cache;
+        $this->_cache = $cache;
     }
 
     /**
@@ -114,7 +114,7 @@ class ApiTransport implements TransportInterface
      * @param array $payload
      * @return \stdClass
      */
-    public function sentMailPayload(array $payload)
+    public function sentMailPayload(array $payload): \stdClass
     {
 
         $this->setToken();
